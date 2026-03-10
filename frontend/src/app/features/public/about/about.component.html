@@ -1,0 +1,291 @@
+<app-navbar></app-navbar>
+
+<main class="bg-white overflow-hidden">
+  <section class="relative min-h-[85vh] flex items-center justify-center pt-[74px] text-center">
+    <div class="absolute inset-0 z-0 scale-105 animate-slow-zoom">
+      <img src="https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?w=1920&q=80&auto=format&fit=crop"
+        alt="Morocco Desert Landscape" class="w-full h-full object-cover">
+      <div class="absolute inset-0 bg-gradient-to-tr from-gray-900/90 via-gray-900/50 to-orange-900/30"></div>
+    </div>
+
+    <div class="relative z-10 max-w-4xl mx-auto px-6 mt-12 animate-fade-in-up">
+      <h1
+        class="text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tight leading-[0.9] mb-8 drop-shadow-2xl">
+        Crafting <span class="text-orange-500">Authentic</span> <br> Memories.
+      </h1>
+      <p class="text-xl md:text-2xl text-white/90 font-medium leading-relaxed max-w-2xl mx-auto mb-12 drop-shadow-lg">
+        We bridge the gap between curious travelers and the heart of Morocco, creating journeys and stories that stay
+        with you forever.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
+        <a routerLink="/tours"
+          class="w-full sm:w-auto px-10 py-5 bg-orange-500 text-white text-sm font-black rounded-2xl hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20 hover:shadow-orange-500/40 hover:-translate-y-1 active:scale-95 no-underline">
+          Begin Your Discovery
+        </a>
+        <a href="#our-story"
+          class="w-full sm:w-auto px-10 py-5 bg-white/10 backdrop-blur-md border border-white/30 text-white text-sm font-black rounded-2xl hover:bg-white/20 transition-all no-underline">
+          Discover Our Mission
+        </a>
+      </div>
+    </div>
+
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-50">
+      <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <polyline points="19 12 12 19 5 12" />
+      </svg>
+    </div>
+  </section>
+
+  <!-- ─── Our Story: The Heart of Morocco ─────────────────────────────────── -->
+  <section id="our-story" class="py-24 md:py-40 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+
+        <!-- Imagery Grid -->
+        <div class="relative group order-2 lg:order-1">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-4 pt-12">
+              <div
+                class="rounded-3xl overflow-hidden shadow-2xl h-64 border-4 border-white transform hover:rotate-2 transition-transform">
+                <img src="https://images.unsplash.com/photo-1548013146-72479768bbaa?w=800&auto=format&fit=crop"
+                  class="w-full h-full object-cover">
+              </div>
+              <div
+                class="rounded-3xl overflow-hidden shadow-2xl h-48 border-4 border-white transform hover:-rotate-1 transition-transform">
+                <img src="https://images.unsplash.com/photo-1553508978-314fe7bcbc05?w=800&auto=format&fit=crop"
+                  class="w-full h-full object-cover">
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div
+                class="rounded-3xl overflow-hidden shadow-2xl h-48 border-4 border-white transform hover:-rotate-2 transition-transform">
+                <img src="https://images.unsplash.com/photo-1505322101000-19457cff32ba?w=800&auto=format&fit=crop"
+                  class="w-full h-full object-cover">
+              </div>
+              <div
+                class="rounded-3xl overflow-hidden shadow-2xl h-80 border-4 border-white transform hover:rotate-1 transition-transform">
+                <img src="https://images.unsplash.com/photo-1563720223185-11003d516935?w=800&auto=format&fit=crop"
+                  class="w-full h-full object-cover">
+              </div>
+            </div>
+          </div>
+          <div class="absolute -z-10 -top-10 -left-10 w-40 h-40 bg-orange-100 rounded-full blur-3xl opacity-60"></div>
+          <div class="absolute -z-10 -bottom-10 -right-10 w-40 h-40 bg-orange-200 rounded-full blur-3xl opacity-40">
+          </div>
+        </div>
+
+        <!-- Narrative -->
+        <div class="order-1 lg:order-2">
+          <span class="text-[10px] font-black text-orange-500 uppercase tracking-[0.3em] block mb-4">The
+            Narrative</span>
+          <h2 class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-[1.1] mb-8">
+            More than Just <span
+              class="text-orange-500 underline decoration-orange-500/20 underline-offset-8">Travel</span>. A Connection.
+          </h2>
+          <div class="space-y-6">
+            <p class="text-lg text-gray-600 font-medium leading-relaxed">
+              MoroccanTours wasn't born from a boardroom, but from a shared love for the hidden alleys of Marrakech, the
+              silence of the Sahara, and the warmth of a mountain Berber tea.
+            </p>
+            <p class="text-lg text-gray-500 font-medium leading-relaxed">
+              We realized that the true Morocco isn't found in tourist traps, but in the stories of the locals. Our
+              mission is to empower certified Moroccan guides and help travelers experience the kingdom through their
+              eyes—authentically, safely, and deeply.
+            </p>
+          </div>
+
+          <!-- Principles -->
+          <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="flex items-start gap-4">
+              <div
+                class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center flex-shrink-0 text-orange-500 shadow-sm border border-orange-100">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-black text-gray-900 uppercase tracking-widest text-[11px] mb-1">Local Empowerment</h4>
+                <p class="text-[12px] text-gray-500 font-bold">100% of our guides are local experts.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div
+                class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center flex-shrink-0 text-orange-500 shadow-sm border border-orange-100">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-black text-gray-900 uppercase tracking-widest text-[11px] mb-1">Authentic Access</h4>
+                <p class="text-[12px] text-gray-500 font-bold">Journeys beyond the usual maps.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Stats: Our Impact ────────────────────────────────────────────────── -->
+  <section class="py-24 bg-gray-50 relative overflow-hidden">
+    <!-- Decorative element -->
+    <div class="absolute top-1/2 left-0 -translate-y-1/2 -ml-20 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl"></div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        @for (feature of features; track feature.label) {
+        <div
+          class="group bg-white p-10 rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-transparent hover:border-orange-500/10 hover:shadow-orange-500/5 transition-all duration-500 text-center">
+          <div
+            class="text-5xl font-black text-gray-900 tracking-tighter mb-2 group-hover:text-orange-500 transition-colors">
+            {{ feature.number }}
+          </div>
+          <div class="text-[11px] font-black text-gray-300 uppercase tracking-[0.2em] mb-4">{{ feature.label }}</div>
+          <p class="text-[12px] text-gray-500 font-bold leading-relaxed">{{ feature.description }}</p>
+        </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Services: The Moroccan Experience ────────────────────────────────── -->
+  <section class="py-32 md:py-48 bg-white relative">
+    <div class="max-w-7xl mx-auto px-6">
+
+      <!-- Header -->
+      <div class="max-w-3xl mx-auto text-center mb-24">
+        <span class="text-[10px] font-black text-orange-500 uppercase tracking-[0.3em] block mb-4">How We Serve
+          You</span>
+        <h2 class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-[1.1] mb-6">Designed for
+          Seamless <br> <span class="text-orange-500">Discovery</span>.</h2>
+        <p class="text-lg text-gray-500 font-medium leading-relaxed">Everything you need for an amazing Moroccan
+          adventure, built with cutting-edge technology and local heart.</p>
+      </div>
+
+      <!-- Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @for (service of services; track service.title) {
+        <div
+          class="group relative bg-gray-50/50 p-10 rounded-[3rem] border border-transparent hover:bg-white hover:border-orange-100 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 cursor-default">
+
+          <!-- Icon -->
+          <div
+            class="w-16 h-16 rounded-[1.5rem] bg-white shadow-xl shadow-gray-200/50 text-orange-500 flex items-center justify-center mb-8 transform group-hover:rotate-6 group-hover:bg-orange-500 group-hover:text-white group-hover:shadow-orange-500/30 transition-all duration-500">
+            @switch (service.icon) {
+            @case ('search') {
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+            }
+            @case ('calendar') {
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            }
+            @case ('guide') {
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            }
+            @case ('payment') {
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+              <line x1="1" y1="10" x2="23" y2="10" />
+            </svg>
+            }
+            @case ('support') {
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            }
+            @case ('flexible') {
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="23 4 23 10 17 10" />
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+            </svg>
+            }
+            }
+          </div>
+
+          <h3
+            class="text-2xl font-black text-gray-900 tracking-tight mb-4 group-hover:text-orange-500 transition-colors">
+            {{ service.title }}</h3>
+          <p class="text-sm font-bold text-gray-400 leading-[1.6]">{{ service.description }}</p>
+        </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Final CTA: Majestic End ─────────────────────────────────────────── -->
+  <section class="py-24 relative overflow-hidden bg-white">
+    <div class="max-w-7xl mx-auto px-6 pt-12">
+      <div class="relative rounded-[4rem] overflow-hidden bg-gray-900 px-8 py-24 sm:px-16 sm:py-32 text-center group">
+        <!-- Image Overlay -->
+        <div class="absolute inset-0 z-0 scale-105 group-hover:scale-110 transition-transform duration-1000">
+          <img src="https://images.unsplash.com/photo-1548013146-72479768bbaa?w=1920&auto=format&fit=crop"
+            class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gray-900/80 backdrop-blur-[2px]"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="relative z-10 max-w-2xl mx-auto">
+          <h2 class="text-4xl md:text-6xl font-black text-white tracking-tight leading-[1] mb-8 drop-shadow-2xl">
+            Tell Your Own <br> <span class="text-orange-500">Moroccan</span> Story.
+          </h2>
+          <p class="text-lg md:text-xl text-white/70 font-medium leading-relaxed mb-12 drop-shadow-lg">
+            Unlock unique experiences and connect with local culture. Your journey starts with a single click.
+          </p>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
+            <a routerLink="/tours"
+              class="w-full sm:w-auto px-12 py-5 bg-orange-500 text-white text-sm font-black rounded-2xl hover:bg-orange-600 transition-all shadow-2xl shadow-orange-500/20 hover:shadow-orange-500/40 hover:-translate-y-1 active:scale-95 no-underline">
+              Explore All Tours
+            </a>
+            <a routerLink="/register/tourist"
+              class="w-full sm:w-auto px-12 py-5 bg-white text-gray-900 text-sm font-black rounded-2xl hover:bg-orange-50 transition-all shadow-xl hover:-translate-y-1 active:scale-95 no-underline">
+              Join the Platform
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<style>
+  @keyframes slow-zoom {
+    0% {
+      transform: scale(1);
+    }
+
+    100% {
+      transform: scale(1.15);
+    }
+  }
+
+  .animate-slow-zoom {
+    animation: slow-zoom 30s linear infinite alternate;
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+</style>
