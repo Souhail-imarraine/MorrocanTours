@@ -1,0 +1,242 @@
+<div class="max-w-6xl mx-auto px-4 sm:px-0">
+  @if (saveSuccess()) {
+  <div
+    class="mb-6 flex items-center gap-3 px-6 py-4 bg-green-50 border border-green-100 rounded-2xl text-sm text-green-700 shadow-sm">
+    <svg class="w-5 h-5 flex-shrink-0 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="3">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+    <span class="font-bold">Success!</span> Profile updated and saved securely.
+  </div>
+  }
+  @if (saveError()) {
+  <div
+    class="mb-6 flex items-center gap-3 px-6 py-4 bg-red-50 border border-red-100 rounded-2xl text-sm text-red-600 shadow-sm">
+    <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
+    </svg>
+    <span class="font-bold">Error:</span> {{ saveError() }}
+  </div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="flex flex-col lg:flex-row gap-8 items-start">
+
+    <!-- ── Left Column: Profile Photo ────────────────────────── -->
+    <div class="w-full lg:w-80 flex-shrink-0 sticky top-24">
+      <div class="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-8 text-center flex flex-col items-center">
+        <h2 class="text-[11px] font-black uppercase text-gray-400 tracking-[0.2em] mb-8 w-full text-left">Account Media
+        </h2>
+
+        <div class="relative mb-6">
+          @if (previewUrl()) {
+          <img [src]="previewUrl()"
+            class="w-32 h-32 rounded-[2rem] object-cover border-4 border-orange-100 shadow-xl group-hover:scale-105 transition-transform">
+          } @else {
+          <div
+            class="w-32 h-32 rounded-[2rem] bg-orange-50 border-4 border-orange-100 flex items-center justify-center shadow-inner">
+            <span class="text-4xl font-black text-orange-500">
+              {{ authService.currentUser()?.email?.charAt(0)?.toUpperCase() || 'G' }}
+            </span>
+          </div>
+          }
+          @if (uploadingImg()) {
+          <div
+            class="absolute inset-0 rounded-[2rem] bg-orange-900/40 backdrop-blur-sm flex items-center justify-center">
+            <svg class="w-8 h-8 text-white animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+            </svg>
+          </div>
+          }
+          @if (profileImagePath() && !uploadingImg()) {
+          <div
+            class="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 border-4 border-white rounded-full flex items-center justify-center shadow-lg">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+          }
+        </div>
+
+        <div class="w-full mt-2">
+          <label
+            class="cursor-pointer flex items-center justify-center gap-2.5 w-full py-3.5 text-xs font-black
+                        text-orange-600 bg-orange-50/50 border border-orange-200 rounded-2xl hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all shadow-sm">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            {{ uploadingImg() ? 'Uploading…' : 'Change Avatar' }}
+            <input type="file" accept="image/*" (change)="onPhotoChange($event)" class="hidden"
+              [disabled]="uploadingImg()">
+          </label>
+          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-4">JPG or PNG · Max 10MB</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Right Column: Form Information ────────────────────── -->
+    <div class="flex-1 space-y-6">
+
+      <!-- Section: Personal -->
+      <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm p-8 sm:p-10">
+        <h2 class="text-[11px] font-black uppercase text-gray-400 tracking-[0.2em] mb-10">Professional Details</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+
+          <div class="space-y-2">
+            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">
+              First name <span class="text-orange-500">*</span>
+            </label>
+            <input formControlName="firstName" type="text" placeholder="Ahmed"
+              [class]="isInvalid('firstName')
+                     ? 'w-full px-5 py-3.5 text-sm font-bold border-2 border-red-100 bg-red-50 text-red-600 rounded-2xl outline-none transition-all'
+                     : 'w-full px-5 py-3.5 text-sm font-bold border-2 border-gray-50 bg-gray-50/50 rounded-2xl outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/5 transition-all text-gray-900'">
+            @if (isInvalid('firstName')) { <p
+              class="mt-1 text-[10px] font-bold text-red-500 pl-1 uppercase tracking-wide">⚠ {{ getError('firstName') }}
+            </p> }
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">
+              Last name <span class="text-orange-500">*</span>
+            </label>
+            <input formControlName="lastName" type="text" placeholder="Benali"
+              [class]="isInvalid('lastName')
+                     ? 'w-full px-5 py-3.5 text-sm font-bold border-2 border-red-100 bg-red-50 text-red-600 rounded-2xl outline-none transition-all'
+                     : 'w-full px-5 py-3.5 text-sm font-bold border-2 border-gray-50 bg-gray-50/50 rounded-2xl outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/5 transition-all text-gray-900'">
+            @if (isInvalid('lastName')) { <p
+              class="mt-1 text-[10px] font-bold text-red-500 pl-1 uppercase tracking-wide">⚠ {{ getError('lastName') }}
+            </p> }
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Phone</label>
+            <input formControlName="phone" type="tel" placeholder="+212 6XX XXX XXX"
+              class="w-full px-5 py-3.5 text-sm font-bold border-2 border-gray-50 bg-gray-50/50 rounded-2xl outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/5 transition-all text-gray-900">
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Resident
+              City</label>
+            <input formControlName="city" type="text" placeholder="Marrakech"
+              class="w-full px-5 py-3.5 text-sm font-bold border-2 border-gray-50 bg-gray-50/50 rounded-2xl outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/5 transition-all text-gray-900">
+          </div>
+
+          <div class="space-y-3 sm:col-span-2">
+            <div class="flex items-center justify-between">
+              <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Languages Proficiency</label>
+              @if (isInvalid('languageIds')) {
+                <p class="text-[10px] font-bold text-red-500 uppercase tracking-wide">Select at least one.</p>
+              }
+            </div>
+
+            @if (languagesLoading()) {
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                @for (_ of [1,2,3,4]; track $index) {
+                  <div class="h-12 rounded-2xl bg-gray-100 animate-pulse"></div>
+                }
+              </div>
+            }
+
+            @if (languagesError()) {
+              <div class="px-4 py-3 bg-red-50 border border-red-200 rounded-2xl text-sm text-red-600">
+                {{ languagesError() }}
+              </div>
+            }
+
+            @if (!languagesLoading() && !languagesError()) {
+              @if (languages().length === 0) {
+                <div class="px-4 py-3 bg-orange-50 border border-orange-200 rounded-2xl text-sm text-orange-700">
+                  No languages available yet. Please contact support or try again later.
+                </div>
+              }
+              @if (languages().length > 0) {
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  @for (lang of languages(); track lang.id) {
+                    <button type="button"
+                            (click)="toggleLanguage(lang.id)"
+                            [class]="isLanguageSelected(lang.id)
+                              ? 'w-full px-4 py-3 rounded-2xl border-2 border-orange-500 bg-orange-50 text-orange-700 font-black text-sm flex items-center justify-between shadow-sm'
+                              : 'w-full px-4 py-3 rounded-2xl border-2 border-gray-100 bg-white text-gray-700 font-bold text-sm flex items-center justify-between hover:border-orange-200 transition-all'">
+                      <span class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full" [class]="isLanguageSelected(lang.id) ? 'bg-orange-500' : 'bg-gray-300'"></span>
+                        {{ lang.name }}
+                      </span>
+                      @if (isLanguageSelected(lang.id)) {
+                        <span class="text-orange-500 font-black text-xs uppercase tracking-wide">Selected</span>
+                      }
+                    </button>
+                  }
+                </div>
+              }
+            }
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Professional
+              Experience (Years)</label>
+            <input formControlName="yearsOfExperience" type="number" min="0" max="60" placeholder="e.g. 5"
+              [class]="isInvalid('yearsOfExperience')
+                     ? 'w-full px-5 py-3.5 text-sm font-bold border-2 border-red-100 bg-red-50 text-red-600 rounded-2xl outline-none transition-all'
+                     : 'w-full px-5 py-3.5 text-sm font-bold border-2 border-gray-50 bg-gray-50/50 rounded-2xl outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/5 transition-all text-gray-900'">
+            @if (isInvalid('yearsOfExperience')) { <p
+              class="mt-1 text-[10px] font-bold text-red-500 pl-1 uppercase tracking-wide">⚠ {{
+              getError('yearsOfExperience') }}</p> }
+          </div>
+
+          <!-- Email (Locked) -->
+          <div class="lg:col-span-2 space-y-2">
+            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Registration Email
+              (Secured)</label>
+            <div
+              class="flex items-center gap-3 px-5 py-3.5 text-sm font-bold border-2 border-gray-100 rounded-2xl bg-gray-50 text-gray-400">
+              <svg class="w-4 h-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              {{ authService.currentUser()?.email }}
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bio Area -->
+        <div class="mt-8 space-y-2">
+          <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Biography &
+            Expertise</label>
+          <textarea formControlName="bio" rows="6"
+            placeholder="Introduce yourself to tourists. Highlight your local knowledge, storytelling skills, and unique perspective on Moroccan culture..."
+            class="w-full px-5 py-4 text-sm font-bold border-2 border-gray-50 bg-gray-50/50 rounded-[2rem] outline-none resize-none
+                           focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/5 transition-all text-gray-900 leading-relaxed"></textarea>
+        </div>
+      </div>
+
+      <!-- Action Area -->
+      <div class="flex items-center justify-end gap-4 pt-4">
+        <button type="submit" [disabled]="saving() || uploadingImg()"
+          class="group relative px-10 py-4 text-sm font-black text-white bg-orange-500
+                       rounded-2xl hover:bg-orange-600 transition-all duration-300
+                       disabled:opacity-60 disabled:cursor-not-allowed shadow-xl shadow-orange-500/20 hover:shadow-orange-600/30 overflow-hidden flex items-center justify-center gap-2">
+          @if (saving()) {
+          <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+          </svg>
+          <span class="relative z-10">Processing…</span>
+          } @else {
+          <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+          <span class="relative z-10 uppercase tracking-widest text-[11px]">Save Account Profile</span>
+          }
+        </button>
+      </div>
+    </div>
+
+  </form>
+</div>
