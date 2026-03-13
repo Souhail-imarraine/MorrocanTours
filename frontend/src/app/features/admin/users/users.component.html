@@ -1,0 +1,226 @@
+<!-- Header with tabs -->
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h1 class="text-xl font-bold text-gray-900">Users</h1>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="flex gap-1 mb-5 bg-[#f5f6fa] p-1 rounded-xl w-fit">
+  <button (click)="activeTab.set('pending')"
+          [class]="activeTab() === 'pending'
+            ? 'px-4 py-2 text-xs font-bold rounded-lg bg-white text-orange-600 shadow-sm transition-all'
+            : 'px-4 py-2 text-xs font-semibold rounded-lg text-gray-500 hover:text-gray-700 transition-all'">
+    Pending Guides
+    @if (pendingGuides().length > 0) {
+      <span class="ml-1.5 px-1.5 py-0.5 bg-orange-500 text-white text-[10px] font-bold rounded-full">
+        {{ pendingGuides().length }}
+      </span>
+    }
+  </button>
+  <button (click)="activeTab.set('all')"
+          [class]="activeTab() === 'all'
+            ? 'px-4 py-2 text-xs font-bold rounded-lg bg-white text-gray-800 shadow-sm transition-all'
+            : 'px-4 py-2 text-xs font-semibold rounded-lg text-gray-500 hover:text-gray-700 transition-all'">
+    All Users
+  </button>
+</div>
+
+<!-- ── PENDING GUIDES TAB ────────────────────────────────── -->
+@if (activeTab() === 'pending') {
+  @if (loadingGuides()) {
+    <div class="space-y-3">
+      @for (_ of [1,2]; track $index) {
+        <div class="bg-white rounded-2xl p-5 border border-gray-100 animate-pulse flex items-center gap-4">
+          <div class="w-10 h-10 bg-gray-100 rounded-full flex-shrink-0"></div>
+          <div class="flex-1 space-y-2"><div class="h-3 bg-gray-100 rounded w-1/3"></div><div class="h-2 bg-gray-100 rounded w-1/2"></div></div>
+          <div class="flex gap-2"><div class="h-8 w-20 bg-gray-100 rounded-xl"></div><div class="h-8 w-16 bg-gray-100 rounded-xl"></div></div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (!loadingGuides() && pendingGuides().length === 0) {
+    <div class="flex flex-col items-center justify-center py-20 text-center">
+      <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center mb-4">
+        <svg class="w-7 h-7 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <h3 class="text-sm font-bold text-gray-700 mb-1">All caught up!</h3>
+      <p class="text-xs text-gray-400">No pending guide applications</p>
+    </div>
+  }
+
+  @if (!loadingGuides() && pendingGuides().length > 0) {
+    <div class="space-y-3">
+      @for (guide of pendingGuides(); track guide.id) {
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+          <!-- Avatar + info -->
+          <div class="flex items-center gap-3 flex-1 min-w-0">
+            <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 font-bold text-sm flex-shrink-0">
+              {{ (guide.firstName || guide.email).charAt(0) | uppercase }}
+            </div>
+            <div class="min-w-0">
+              <p class="font-semibold text-gray-900 text-sm">{{ guide.firstName }} {{ guide.lastName }}</p>
+              <p class="text-xs text-gray-400 truncate">{{ guide.email }}</p>
+              @if (guide.city || guide.yearsOfExperience) {
+                <p class="text-xs text-gray-400 mt-0.5">
+                  @if (guide.city) { <span>{{ guide.city }}</span> }
+                  @if (guide.yearsOfExperience) { <span class="ml-2">{{ guide.yearsOfExperience }}y exp</span> }
+                </p>
+              }
+            </div>
+          </div>
+
+          <!-- Languages / Bio snippet -->
+          @if (guide.languages) {
+            <div class="hidden sm:block flex-shrink-0 max-w-[180px]">
+              <p class="text-xs text-gray-400">Languages</p>
+              <p class="text-xs font-medium text-gray-700 truncate">{{ formatLanguages(guide) }}</p>
+            </div>
+          }
+
+          <!-- Actions -->
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <button (click)="approveGuide(guide.id)" [disabled]="approvingId() === guide.id"
+                    class="px-3 py-1.5 text-xs font-semibold text-white bg-green-500 rounded-xl
+                           hover:bg-green-600 transition-all disabled:opacity-50 inline-flex items-center gap-1">
+              @if (approvingId() === guide.id) {
+                <svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                </svg>
+              }
+              Approve
+            </button>
+            <button (click)="rejectGuide(guide.id)" [disabled]="rejectingId() === guide.id"
+                    class="px-3 py-1.5 text-xs font-semibold text-red-500 bg-red-50 rounded-xl
+                           hover:bg-red-100 transition-all disabled:opacity-50">
+              Reject
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+}
+
+<!-- ── ALL USERS TAB ─────────────────────────────────────── -->
+@if (activeTab() === 'all') {
+  @if (loadingUsers()) {
+    <div class="bg-white rounded-2xl border border-gray-100 animate-pulse p-6">
+      @for (_ of [1,2,3,4,5]; track $index) {
+        <div class="flex items-center gap-4 py-3 border-b border-gray-50">
+          <div class="w-8 h-8 bg-gray-100 rounded-full flex-shrink-0"></div>
+          <div class="flex-1 space-y-2"><div class="h-3 bg-gray-100 rounded w-1/3"></div><div class="h-2 bg-gray-100 rounded w-1/2"></div></div>
+          <div class="h-6 w-16 bg-gray-100 rounded-full"></div>
+          <div class="h-7 w-20 bg-gray-100 rounded-lg"></div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (!loadingUsers() && users().length > 0) {
+    <!-- Desktop table -->
+    <div class="hidden sm:block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-gray-100 bg-[#f5f6fa]">
+            <th class="text-left px-5 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider">User</th>
+            <th class="text-center px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Role</th>
+            <th class="text-center px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Status</th>
+            <th class="text-left px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Joined</th>
+            <th class="text-center px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users(); track user.id) {
+            <tr class="border-b border-gray-50 hover:bg-[#fafafa] transition-colors">
+              <td class="px-5 py-3.5">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0"
+                       [class]="user.role === 'GUIDE' ? 'bg-orange-100 text-orange-600' : 'bg-blue-100 text-blue-600'">
+                    {{ (user.firstName || user.email).charAt(0) | uppercase }}
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-800 text-xs">{{ user.firstName }} {{ user.lastName }}</p>
+                    <p class="text-[10px] text-gray-400">{{ user.email }}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-4 py-3.5 text-center">
+                <span [class]="'inline-block text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full ' + roleColor(user.role)">
+                  {{ user.role }}
+                </span>
+              </td>
+              <td class="px-4 py-3.5 text-center">
+                @if (user.active) {
+                  <span class="inline-flex items-center gap-1 text-[10px] font-bold text-green-700 bg-green-100 px-2.5 py-1 rounded-full">
+                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Active
+                  </span>
+                } @else {
+                  <span class="inline-flex items-center gap-1 text-[10px] font-bold text-red-600 bg-red-100 px-2.5 py-1 rounded-full">
+                    <span class="w-1.5 h-1.5 bg-red-400 rounded-full"></span> Disabled
+                  </span>
+                }
+              </td>
+              <td class="px-4 py-3.5 text-xs text-gray-400">
+                {{ user.createdAt | date:'dd MMM yyyy' }}
+              </td>
+              <td class="px-4 py-3.5 text-center">
+                <button (click)="toggleStatus(user)" [disabled]="togglingId() === user.id"
+                        [class]="user.active
+                          ? 'px-3 py-1.5 text-xs font-semibold text-red-500 bg-red-50 rounded-lg hover:bg-red-100 transition-all disabled:opacity-50'
+                          : 'px-3 py-1.5 text-xs font-semibold text-green-600 bg-green-50 rounded-lg hover:bg-green-100 transition-all disabled:opacity-50'">
+                  @if (togglingId() === user.id) {
+                    <svg class="w-3 h-3 animate-spin inline" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                    </svg>
+                  } @else {
+                    {{ user.active ? 'Disable' : 'Enable' }}
+                  }
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mobile cards -->
+    <div class="sm:hidden space-y-3">
+      @for (user of users(); track user.id) {
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0"
+                   [class]="user.role === 'GUIDE' ? 'bg-orange-100 text-orange-600' : 'bg-blue-100 text-blue-600'">
+                {{ (user.firstName || user.email).charAt(0) | uppercase }}
+              </div>
+              <div>
+                <p class="font-semibold text-gray-800 text-sm">{{ user.firstName }} {{ user.lastName }}</p>
+                <p class="text-xs text-gray-400">{{ user.email }}</p>
+              </div>
+            </div>
+            <span [class]="'text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full ' + roleColor(user.role)">{{ user.role }}</span>
+          </div>
+          <div class="flex items-center justify-between">
+            @if (user.active) {
+              <span class="text-xs text-green-600 font-semibold">● Active</span>
+            } @else {
+              <span class="text-xs text-red-500 font-semibold">● Disabled</span>
+            }
+            <button (click)="toggleStatus(user)"
+                    [class]="user.active
+                      ? 'px-3 py-1.5 text-xs font-semibold text-red-500 bg-red-50 rounded-lg hover:bg-red-100 transition-all'
+                      : 'px-3 py-1.5 text-xs font-semibold text-green-600 bg-green-50 rounded-lg hover:bg-green-100 transition-all'">
+              {{ user.active ? 'Disable' : 'Enable' }}
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+}
