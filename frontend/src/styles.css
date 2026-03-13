@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global snackbar styling for login prompts */
+.snack-login .mdc-snackbar__surface {
+	background: #0f172a;
+	color: #f8fafc;
+	border: 1px solid #fb923c;
+	box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+	border-radius: 14px;
+	padding: 0 18px;
+}
+
+.snack-login .mat-mdc-snack-bar-label {
+	font-weight: 700;
+	letter-spacing: 0.04em;
+}
+
+.snack-login .mat-mdc-snack-bar-action .mdc-button__label {
+	color: #fb923c;
+	font-weight: 800;
+	letter-spacing: 0.06em;
+}
