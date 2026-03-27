@@ -20,4 +20,6 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     List<Tour> findByGuideId(Long guideId);
 
     long countByStatus(TourStatus status);
+
+    boolean existsByCategoryId(Long categoryId);
 }

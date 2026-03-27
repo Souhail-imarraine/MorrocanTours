@@ -24,6 +24,7 @@ export class CategoriesComponent implements OnInit {
   editMode        = signal(false);
   editId          = signal<number | null>(null);
   showDeleteModal = signal(false);
+  deleteError     = signal('');
   categoryToDelete = signal<CategoryResponse | null>(null);
 
   form = this.fb.group({
@@ -69,6 +70,7 @@ export class CategoriesComponent implements OnInit {
   closeDeleteModal(): void {
     this.showDeleteModal.set(false);
     this.categoryToDelete.set(null);
+    this.deleteError.set('');
   }
 
   isInvalid(f: string): boolean {
@@ -113,9 +115,9 @@ export class CategoriesComponent implements OnInit {
         this.closeDeleteModal();
         this.loadCategories();
       },
-      error: () => {
+      error: (err: any) => {
         this.deletingId.set(null);
-        // We could add a delete error signal here if needed
+        this.deleteError.set(err?.error?.message || 'Deletion failed. This category might be in use.');
       }
     });
   }

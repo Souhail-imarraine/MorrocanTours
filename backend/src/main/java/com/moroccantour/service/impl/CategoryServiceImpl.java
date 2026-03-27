@@ -7,7 +7,9 @@ import com.moroccantour.exception.ConflictException;
 import com.moroccantour.exception.NotFoundException;
 import com.moroccantour.mapper.CategoryMapper;
 import com.moroccantour.repository.CategoryRepository;
+import com.moroccantour.repository.TourRepository;
 import com.moroccantour.service.CategoryService;
+import com.moroccantour.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final TourRepository tourRepository;
     private final CategoryMapper categoryMapper;
 
     @Override
@@ -46,6 +49,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void delete(Long id) {
+        if (tourRepository.existsByCategoryId(id)) {
+            throw new BadRequestException("Category cannot be deleted because it is being used by one or more tours.");
+        }
         categoryRepository.deleteById(id);
     }
 }
