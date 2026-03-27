@@ -24,9 +24,9 @@ public class TourController {
 
     @GetMapping
     public ResponseEntity<PageResponse<TourResponse>> all(@RequestParam(defaultValue = "0") int page,
-                                                          @RequestParam(defaultValue = "10") int size,
-                                                          @RequestParam(required = false) String city,
-                                                          @RequestParam(required = false) Long categoryId) {
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) Long categoryId) {
         return ResponseEntity.ok(tourService.getAll(page, size, city, categoryId));
     }
 
@@ -38,7 +38,7 @@ public class TourController {
     @PostMapping("/guide")
     @PreAuthorize("hasRole('GUIDE')")
     public ResponseEntity<TourResponse> create(@RequestBody @Valid CreateTourRequest request,
-                                               @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(tourService.create(request));
     }
 

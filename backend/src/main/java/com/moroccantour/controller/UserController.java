@@ -28,21 +28,21 @@ public class UserController {
 
     @PutMapping("/profile")
     public ResponseEntity<UserResponse> updateProfile(@AuthenticationPrincipal UserDetails userDetails,
-                                                      @RequestBody java.util.Map<String, Object> updates) {
+            @RequestBody java.util.Map<String, Object> updates) {
         return ResponseEntity.ok(userService.updateProfile(userDetails.getUsername(), updates));
     }
 
     @GetMapping("/admin/users")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PageResponse<UserResponse>> all(@RequestParam(defaultValue = "0") int page,
-                                                          @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(userService.getAll(page, size));
     }
 
     @PutMapping("/admin/users/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> updateStatus(@PathVariable Long id,
-                                                     @RequestParam boolean active) {
+            @RequestParam boolean active) {
         return ResponseEntity.ok(userService.updateStatus(id, new UpdateUserStatusRequest(active)));
     }
 

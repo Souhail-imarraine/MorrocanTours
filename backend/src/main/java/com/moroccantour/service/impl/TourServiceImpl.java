@@ -28,11 +28,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class TourServiceImpl implements TourService {
 
@@ -59,12 +61,11 @@ public class TourServiceImpl implements TourService {
         }
         var mapped = result.map(tourMapper::toResponse);
         return new PageResponse<>(
-            mapped.getContent(),
-            mapped.getTotalElements(),
-            mapped.getTotalPages(),
-            mapped.getSize(),
-            mapped.getNumber()
-        );
+                mapped.getContent(),
+                mapped.getTotalElements(),
+                mapped.getTotalPages(),
+                mapped.getSize(),
+                mapped.getNumber());
     }
 
     @Override
@@ -75,10 +76,12 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public TourResponse create(CreateTourRequest request) {
-        User guide = currentUser();
+        User authUser = currentUser();
+        User guide = userRepository.findById(authUser.getId())
+                .orElseThrow(() -> new NotFoundException("Guide not found"));
         ensureGuide(guide);
         Category category = categoryRepository.findById(request.categoryId())
-            .orElseThrow(() -> new NotFoundException("Category not found"));
+                .orElseThrow(() -> new NotFoundException("Category not found"));
         Tour tour = tourMapper.toEntity(request);
         tour.setCategory(category);
         tour.setGuide(guide);
@@ -91,8 +94,9 @@ public class TourServiceImpl implements TourService {
     public TourResponse update(Long id, UpdateTourRequest request) {
         Tour tour = tourRepository.findById(id).orElseThrow(() -> new NotFoundException("Tour not found"));
         ensureGuide(tour.getGuide());
+
         Category category = categoryRepository.findById(request.categoryId())
-            .orElseThrow(() -> new NotFoundException("Category not found"));
+                .orElseThrow(() -> new NotFoundException("Category not found"));
         tourMapper.updateEntity(request, tour);
         tour.setCategory(category);
         tourRepository.save(tour);

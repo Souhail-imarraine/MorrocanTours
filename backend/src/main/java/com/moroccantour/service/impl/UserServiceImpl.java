@@ -13,11 +13,13 @@ import com.moroccantour.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -36,12 +38,11 @@ public class UserServiceImpl implements UserService {
         var pageable = PageRequest.of(page, size);
         var result = userRepository.findAll(pageable).map(userMapper::toResponse);
         return new com.moroccantour.dto.response.PageResponse<>(
-            result.getContent(),
-            result.getTotalElements(),
-            result.getTotalPages(),
-            result.getSize(),
-            result.getNumber()
-        );
+                result.getContent(),
+                result.getTotalElements(),
+                result.getTotalPages(),
+                result.getSize(),
+                result.getNumber());
     }
 
     @Override
@@ -81,13 +82,20 @@ public class UserServiceImpl implements UserService {
     public UserResponse updateProfile(String email, Map<String, Object> updates) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
 
-        if (updates.containsKey("firstName")) user.setFirstName((String) updates.get("firstName"));
-        if (updates.containsKey("lastName")) user.setLastName((String) updates.get("lastName"));
-        if (updates.containsKey("phone")) user.setPhone((String) updates.get("phone"));
-        if (updates.containsKey("city")) user.setCity((String) updates.get("city"));
-        if (updates.containsKey("bio")) user.setBio((String) updates.get("bio"));
-        if (updates.containsKey("profileImage")) user.setProfileImage((String) updates.get("profileImage"));
-        if (updates.containsKey("profileImagePath")) user.setProfileImage((String) updates.get("profileImagePath"));
+        if (updates.containsKey("firstName"))
+            user.setFirstName((String) updates.get("firstName"));
+        if (updates.containsKey("lastName"))
+            user.setLastName((String) updates.get("lastName"));
+        if (updates.containsKey("phone"))
+            user.setPhone((String) updates.get("phone"));
+        if (updates.containsKey("city"))
+            user.setCity((String) updates.get("city"));
+        if (updates.containsKey("bio"))
+            user.setBio((String) updates.get("bio"));
+        if (updates.containsKey("profileImage"))
+            user.setProfileImage((String) updates.get("profileImage"));
+        if (updates.containsKey("profileImagePath"))
+            user.setProfileImage((String) updates.get("profileImagePath"));
 
         if (updates.containsKey("languageIds")) {
             var idsObj = updates.get("languageIds");
@@ -96,7 +104,8 @@ public class UserServiceImpl implements UserService {
             if (!ids.isEmpty() && languages.size() != ids.size()) {
                 throw new NotFoundException("One or more languages not found");
             }
-            user.setLanguages(new java.util.HashSet<>(languages));
+            user.getLanguages().clear();
+            user.getLanguages().addAll(languages);
         }
 
         userRepository.save(user);
@@ -108,8 +117,10 @@ public class UserServiceImpl implements UserService {
             return raw.stream()
                     .filter(java.util.Objects::nonNull)
                     .map(v -> {
-                        if (v instanceof Number n) return n.longValue();
-                        if (v instanceof String s) return Long.parseLong(s);
+                        if (v instanceof Number n)
+                            return n.longValue();
+                        if (v instanceof String s)
+                            return Long.parseLong(s);
                         throw new IllegalArgumentException("Unsupported id type");
                     })
                     .toList();
