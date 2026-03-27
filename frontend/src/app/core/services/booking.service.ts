@@ -31,7 +31,12 @@ export class BookingService {
   rejectBooking(bookingId: number): Observable<BookingResponse> {
     return this.http.put<BookingResponse>(`${this.apiUrl}/guide/${bookingId}/reject`, {});
   }
+
   countAllTotalBookings(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/count-booking`);
+  }
+
+  getAllBookings(): Observable<BookingResponse[]> {
+    return this.http.get<BookingResponse[]>(`${this.apiUrl}/booking`);
   }
 }

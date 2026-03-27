@@ -18,10 +18,10 @@ export class BookingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.bookingService.getAllBookings().subscribe({
-      next: (book) => {
+      next: (book: BookingResponse[]) => {
         this.bookings.set(book)
       },
-      error: (err) => {
+      error: (err: any) => {
         console.log(err);
       }
     })

@@ -40,19 +40,16 @@ public class BookingServiceImpl implements BookingService {
         Tour tour = tourRepository.findById(request.tourId())
                 .orElseThrow(() -> new NotFoundException("Tour not found"));
 
-        // Rule 1: Prevent duplicate bookings for the same tour (ignore cancelled ones)
         if (bookingRepository.existsByTourIdAndTouristIdAndStatusNot(tour.getId(), tourist.getId(),
                 BookingStatus.CANCELLED)) {
             throw new BadRequestException("You have already booked this tour.");
         }
 
-        // Rule 2: Global limit of 5 bookings per tourist (ignore cancelled ones)
         long currentBookings = bookingRepository.countByTouristIdAndStatusNot(tourist.getId(), BookingStatus.CANCELLED);
         if (currentBookings >= 5) {
             throw new BadRequestException("You have reached the maximum limit of 5 bookings.");
         }
 
-        // Rule 3: Check tour capacity
         Integer totalOccupied = bookingRepository.sumParticipantsByTourIdAndStatusNotCancelled(
                 tour.getId(),
                 BookingStatus.CANCELLED);
@@ -110,6 +107,13 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingResponse rejectBooking(Long bookingId, String email) {
         return updateStatus(bookingId, email, BookingStatus.CANCELLED);
+    }
+
+    @Override
+    public List<BookingResponse> getAllBookings() {
+        return bookingRepository.findAll().stream()
+                .map(bookingMapper::toResponse)
+                .toList();
     }
 
     private BookingResponse updateStatus(Long bookingId, String email, BookingStatus status) {

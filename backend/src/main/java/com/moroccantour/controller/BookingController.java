@@ -61,12 +61,10 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.rejectBooking(bookingId, userDetails.getUsername()));
     }
 
-    @GetMapping
+    @GetMapping("/booking")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<BookingResponse>> getAllBookings() {
         return ResponseEntity.ok(bookingService.getAllBookings());
     }
 
 }
-
-    
