@@ -59,15 +59,9 @@
                          rounded-xl hover:bg-blue-100 transition-all">
             Edit
           </button>
-          <button (click)="deleteCategory(cat.id)" [disabled]="deletingId() === cat.id"
+          <button (click)="confirmDelete(cat)" [disabled]="deletingId() === cat.id"
                   class="flex-1 py-2 text-xs font-semibold text-red-500 bg-red-50
                          rounded-xl hover:bg-red-100 transition-all disabled:opacity-50 inline-flex items-center justify-center gap-1">
-            @if (deletingId() === cat.id) {
-              <svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-              </svg>
-            }
             Delete
           </button>
         </div>
@@ -154,6 +148,50 @@
             </div>
           </form>
         }
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ── Delete Confirmation Modal ────────────────────────────── -->
+@if (showDeleteModal()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
+      <div class="p-6 text-center">
+        <!-- Danger Icon -->
+        <div class="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/>
+          </svg>
+        </div>
+        
+        <h2 class="text-lg font-bold text-gray-900 mb-2">Delete Category?</h2>
+        <p class="text-sm text-gray-500 mb-6">
+          Are you sure you want to delete <span class="font-bold text-gray-900">"{{ categoryToDelete()?.name }}"</span>? 
+          This action cannot be undone.
+        </p>
+
+        <div class="flex flex-col gap-2">
+          <button (click)="onDeleteConfirmed()" [disabled]="deletingId() !== null"
+                  class="w-full py-3 bg-red-500 text-white font-bold rounded-2xl hover:bg-red-600 
+                         transition-all active:scale-95 disabled:opacity-50 inline-flex items-center justify-center gap-2">
+            @if (deletingId() !== null) {
+              <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+              </svg>
+              Deleting...
+            } @else {
+              Delete Category
+            }
+          </button>
+          
+          <button (click)="closeDeleteModal()" [disabled]="deletingId() !== null"
+                  class="w-full py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 
+                         rounded-2xl transition-all disabled:opacity-50">
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   </div>

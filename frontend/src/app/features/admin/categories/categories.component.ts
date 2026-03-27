@@ -21,8 +21,10 @@ export class CategoriesComponent implements OnInit {
   deletingId  = signal<number | null>(null);
   saveError   = signal('');
   saveSuccess = signal(false);
-  editMode    = signal(false);
-  editId      = signal<number | null>(null);
+  editMode        = signal(false);
+  editId          = signal<number | null>(null);
+  showDeleteModal = signal(false);
+  categoryToDelete = signal<CategoryResponse | null>(null);
 
   form = this.fb.group({
     name:        ['', [Validators.required, Validators.minLength(2)]],
@@ -59,6 +61,16 @@ export class CategoriesComponent implements OnInit {
 
   closeModal(): void { this.showModal.set(false); }
 
+  confirmDelete(cat: CategoryResponse): void {
+    this.categoryToDelete.set(cat);
+    this.showDeleteModal.set(true);
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteModal.set(false);
+    this.categoryToDelete.set(null);
+  }
+
   isInvalid(f: string): boolean {
     const c = this.form.get(f);
     return !!(c?.invalid && (c.dirty || c.touched));
@@ -90,12 +102,21 @@ export class CategoriesComponent implements OnInit {
     });
   }
 
-  deleteCategory(id: number): void {
-    if (!confirm('Delete this category?')) return;
-    this.deletingId.set(id);
-    this.categoryService.deleteCategory(id).subscribe({
-      next:  () => { this.deletingId.set(null); this.loadCategories(); },
-      error: ()  => this.deletingId.set(null)
+  onDeleteConfirmed(): void {
+    const cat = this.categoryToDelete();
+    if (!cat) return;
+    
+    this.deletingId.set(cat.id);
+    this.categoryService.deleteCategory(cat.id).subscribe({
+      next: () => {
+        this.deletingId.set(null);
+        this.closeDeleteModal();
+        this.loadCategories();
+      },
+      error: () => {
+        this.deletingId.set(null);
+        // We could add a delete error signal here if needed
+      }
     });
   }
 }
