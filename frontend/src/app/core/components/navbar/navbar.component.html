@@ -1,141 +1,229 @@
-<header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm transition-all duration-300">
-  <div class="max-w-[1180px] mx-auto px-6 h-[74px] flex items-center justify-between">
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 flex justify-center px-4"
+  [class.pt-4]="scrolled()" [class.pt-0]="!scrolled()">
 
-    <div class="flex items-center gap-10">
-      <a routerLink="/" class="flex items-center gap-2.5 text-[19px] font-extrabold text-gray-900 tracking-tight no-underline transition-colors hover:text-orange-500">
-        <svg class="w-[26px] h-[26px] text-orange-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-        </svg>
-        <span>MoroccanTours</span>
-      </a>
+  <div class="w-full max-w-[1240px] transition-all duration-500 rounded-full border border-white/10"
+    [class.bg-white/70]="scrolled()" [class.backdrop-blur-xl]="scrolled()" [class.shadow-2xl]="scrolled()"
+    [class.bg-transparent]="!scrolled() && transparent" [class.shadow-none]="!scrolled() && transparent"
+    [class.bg-white]="!scrolled() && !mobileMenuOpen() && !transparent"
+    [class.shadow-sm]="!scrolled() && !mobileMenuOpen() && !transparent" [class.px-12]="scrolled()"
+    [class.px-8]="!scrolled() && !transparent" [class.px-0]="!scrolled() && transparent">
 
-      <nav class="hidden md:flex items-center gap-8">
-        <a routerLink="/" routerLinkActive="text-orange-500" [routerLinkActiveOptions]="{exact: true}"
-           class="text-[14px] font-bold text-gray-500 hover:text-orange-500 no-underline transition-colors">Home</a>
-        <a routerLink="/tours" routerLinkActive="text-orange-500"
-           class="text-[14px] font-bold text-gray-500 hover:text-orange-500 no-underline transition-colors">Experiences</a>
+    <div class="h-[74px] relative flex items-center">
+      <div class="flex-shrink-0">
+        <a routerLink="/" class="group flex items-center no-underline">
+          <img src="Logo.png" alt="MoroccanTours"
+            class="h-12 w-auto transition-transform duration-500 group-hover:scale-105">
+        </a>
+      </div>
 
-        @if (currentUser()?.role === 'TOURIST') {
+      <div class="hidden md:block absolute left-1/2 -translate-x-1/2">
+        <nav class="flex items-center gap-10">
+          <a routerLink="/" routerLinkActive="text-orange-500" [routerLinkActiveOptions]="{exact: true}"
+            class="relative py-2 text-sm font-black hover:text-orange-500 no-underline transition-all group"
+            [class.text-gray-100]="!scrolled() && transparent" [class.text-gray-500]="scrolled() || !transparent">
+            Home
+            <span
+              class="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a routerLink="/tours" routerLinkActive="text-orange-500"
+            class="relative py-2 text-sm font-black hover:text-orange-500 no-underline transition-all group"
+            [class.text-gray-100]="!scrolled() && transparent" [class.text-gray-500]="scrolled() || !transparent">
+            Experiences
+            <span
+              class="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-full"></span>
+          </a>
+
+          @if (currentUser()?.role === 'TOURIST') {
           <a routerLink="/tourist/my-bookings" routerLinkActive="text-orange-500"
-             class="text-[14px] font-bold text-gray-500 hover:text-orange-500 no-underline transition-colors">Mes Réservations</a>
-        }
+            class="relative py-2 text-sm font-black hover:text-orange-500 no-underline transition-all group"
+            [class.text-gray-100]="!scrolled() && transparent" [class.text-gray-500]="scrolled() || !transparent">
+            Bookings
+            <span
+              class="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          }
 
-        @if (currentUser()?.role === 'GUIDE') {
+          @if (currentUser()?.role === 'GUIDE' && !currentUser()?.active) {
           <a routerLink="/guide/dashboard" routerLinkActive="text-orange-500"
-             class="text-[14px] font-bold text-gray-500 hover:text-orange-500 no-underline transition-colors">Guide Dashboard</a>
-        }
+            class="relative py-2 text-sm font-black hover:text-orange-500 no-underline transition-all group"
+            [class.text-gray-100]="!scrolled() && transparent" [class.text-gray-500]="scrolled() || !transparent">
+            Dashboard
+            <span
+              class="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          }
 
-        @if (currentUser()?.role === 'ADMIN') {
+          @if (currentUser()?.role === 'ADMIN') {
           <a routerLink="/admin/dashboard" routerLinkActive="text-orange-500"
-             class="text-[14px] font-bold text-gray-500 hover:text-orange-500 no-underline transition-colors">Admin Panel</a>
-        }
+            class="relative py-2 text-sm font-black hover:text-orange-500 no-underline transition-all group"
+            [class.text-gray-100]="!scrolled() && transparent" [class.text-gray-500]="scrolled() || !transparent">
+            Admin
+            <span
+              class="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          }
+        </nav>
+      </div>
 
-        <a routerLink="/about" routerLinkActive="text-orange-500"
-           class="text-[14px] font-bold text-gray-500 hover:text-orange-500 no-underline transition-colors">Our Story</a>
-      </nav>
-    </div>
-
-    <div class="flex items-center gap-4">
-
-      @if (!currentUser()) {
-        <a routerLink="/login"
-           class="hidden md:inline-flex items-center justify-center px-6 py-2.5 text-[13px] font-black text-gray-700 bg-gray-50 rounded-xl no-underline hover:bg-gray-100 transition-all">
-          Sign in
-        </a>
-        <a routerLink="/register"
-           class="hidden md:inline-flex items-center justify-center px-6 py-2.5 text-[13px] font-black text-white bg-orange-500 rounded-xl no-underline shadow-lg shadow-orange-500/20 hover:bg-orange-600 hover:-translate-y-0.5 transition-all">
-          Start Exploring
-        </a>
-      } @else {
+      <div class="ml-auto flex items-center gap-6">
+        @if (!currentUser()) {
+        <div class="hidden md:flex items-center gap-3">
+          <a routerLink="/login"
+            class="px-6 py-2.5 text-sm font-black hover:text-orange-500 no-underline transition-colors uppercase tracking-widest text-[11px]"
+            [class.text-white]="!scrolled() && transparent" [class.text-gray-900]="scrolled() || !transparent">
+            Sign in
+          </a>
+          <a routerLink="/register"
+            class="px-7 py-3 text-sm font-black text-white bg-gray-900 rounded-full no-underline shadow-xl shadow-gray-900/10 hover:bg-orange-500 hover:-translate-y-1 active:scale-95 transition-all text-[11px] uppercase tracking-widest">
+            Start Journey
+          </a>
+        </div>
+        } @else {
         <div class="relative">
           <button (click)="toggleUserMenu()"
-                  class="flex items-center gap-3 p-1 rounded-full hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
-            <div class="w-9 h-9 rounded-full bg-orange-100 border-2 border-white shadow-sm overflow-hidden flex items-center justify-center">
-              @if (profileImage()) {
-                <img [src]="profileImage()" class="w-full h-full object-cover">
+            class="group flex items-center gap-4 pl-1 pr-4 py-1 rounded-full border transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/5"
+            [class.bg-gray-50]="scrolled() || !transparent" [class.bg-white/10]="!scrolled() && transparent"
+            [class.border-gray-100/50]="scrolled() || !transparent" [class.border-white/20]="!scrolled() && transparent"
+            [class.hover:bg-white]="scrolled() || !transparent" [class.hover:bg-white/20]="!scrolled() && transparent">
+            <div
+              class="w-10 h-10 rounded-full border-2 border-white shadow-sm overflow-hidden bg-orange-100 flex items-center justify-center transition-transform group-hover:scale-105">
+              @if (profileImage() && currentUser()?.role !== 'TOURIST') {
+              <img [src]="profileImage()" class="w-full h-full object-cover">
               } @else {
-                <span class="text-orange-600 font-black text-xs">{{ (currentUser()?.firstName || 'U').charAt(0) }}</span>
+              <span class="text-orange-600 font-black text-sm">{{ (currentUser()?.firstName || 'U').charAt(0) }}</span>
               }
             </div>
-            <div class="hidden lg:block text-left mr-2">
-              <p class="text-[11px] font-black text-gray-900 leading-none mb-0.5">{{ currentUser()?.firstName }}</p>
-              <p class="text-[9px] font-bold text-orange-500 uppercase tracking-wider leading-none">{{ currentUser()?.role }}</p>
+            <div class="hidden lg:block text-left">
+              <p class="text-[12px] font-black leading-none mb-1" [class.text-white]="!scrolled() && transparent"
+                [class.text-gray-900]="scrolled() || !transparent">
+                {{ currentUser()?.firstName }}
+              </p>
+              <div class="flex items-center gap-1.5 font-bold text-orange-500 uppercase tracking-widest text-[9px]">
+                <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                {{ currentUser()?.role }}
+              </div>
             </div>
-            <svg class="hidden lg:block w-3.5 h-3.5 text-gray-400" [class.rotate-180]="userMenuOpen()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-              <polyline points="6 9 12 15 18 9"/>
+            <svg class="hidden lg:block w-4 h-4 transition-transform duration-300"
+              [class.text-gray-400]="scrolled() || !transparent" [class.text-white/60]="!scrolled() && transparent"
+              [class.rotate-180]="userMenuOpen()" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="3">
+              <polyline points="6 9 12 15 18 9" />
             </svg>
           </button>
 
           @if (userMenuOpen()) {
-            <div class="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-[60] animate-in fade-in zoom-in duration-200">
-              <div class="px-4 py-3 border-b border-gray-50 mb-1">
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Signed in as</p>
-                <p class="text-sm font-black text-gray-900 truncate">{{ currentUser()?.email }}</p>
+          <div
+            class="absolute right-0 mt-4 w-64 bg-white/95 backdrop-blur-2xl rounded-[2rem] shadow-2xl border border-gray-100 py-3 z-[100] animate-in fade-in zoom-in duration-300">
+            <div class="px-6 py-4 border-b border-gray-50/50 mb-2">
+              <p class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-1.5">Authenticated as</p>
+              <p class="text-sm font-black text-gray-900 truncate">{{ currentUser()?.email }}</p>
+            </div>
+
+            <a routerLink="/profile" (click)="userMenuOpen.set(false)"
+              class="flex items-center gap-4 px-6 py-3 text-sm font-black text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition-all no-underline group">
+              <div
+                class="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center group-hover:bg-orange-100 transition-colors">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
               </div>
+              My Profile
+            </a>
 
-              <a routerLink="/profile" (click)="userMenuOpen.set(false)" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition-colors no-underline">
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                My Profile
-              </a>
+            @if (currentUser()?.role === 'TOURIST') {
+            <a routerLink="/tourist/my-bookings" (click)="userMenuOpen.set(false)"
+              class="flex items-center gap-4 px-6 py-3 text-sm font-black text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition-all no-underline group">
+              <div
+                class="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center group-hover:bg-orange-100 transition-colors">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+              </div>
+              My Bookings
+            </a>
+            }
 
-              @if (currentUser()?.role === 'TOURIST') {
-                <a routerLink="/tourist/my-bookings" (click)="userMenuOpen.set(false)" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition-colors no-underline">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                  Mes Réservations
-                </a>
-              }
-
-              <button (click)="logout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 transition-colors">
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <div class="mx-3 mt-2 pt-2 border-t border-gray-50/50">
+              <button (click)="logout()"
+                class="w-full flex items-center gap-4 px-3 py-3 text-sm font-black text-red-500 hover:bg-red-50 rounded-2xl transition-all">
+                <div class="w-8 h-8 rounded-xl bg-red-100/50 flex items-center justify-center">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                  </svg>
+                </div>
                 Sign Out
               </button>
             </div>
-            <div class="fixed inset-0 z-[55]" (click)="userMenuOpen.set(false)"></div>
+          </div>
+          <div class="fixed inset-0 z-[55]" (click)="userMenuOpen.set(false)"></div>
           }
         </div>
-      }
+        }
 
-      <button (click)="toggleMenu()"
-              class="flex md:hidden flex-col gap-1.5 bg-transparent border-none cursor-pointer p-1.5 ml-2">
-        <span class="block w-[22px] h-[2px] bg-gray-800 rounded-sm transition-all duration-300"
-              [class.rotate-45]="mobileMenuOpen()" [class.translate-y-2]="mobileMenuOpen()"></span>
-        <span class="block w-[22px] h-[2px] bg-gray-800 rounded-sm transition-all duration-300"
-              [class.opacity-0]="mobileMenuOpen()"></span>
-        <span class="block w-[22px] h-[2px] bg-gray-800 rounded-sm transition-all duration-300"
-              [class.-rotate-45]="mobileMenuOpen()" [class.-translate-y-2]="mobileMenuOpen()"></span>
-      </button>
+        <button (click)="toggleMenu()" class="md:hidden flex flex-col gap-1.5 p-2 rounded-2xl transition-colors"
+          [class.bg-gray-50]="scrolled() || !transparent" [class.bg-white/10]="!scrolled() && transparent"
+          [class.hover:bg-gray-100]="scrolled() || !transparent" [class.hover:bg-white/20]="!scrolled() && transparent">
+          <span class="block w-6 h-0.5 rounded-full transition-all" [class.bg-gray-900]="scrolled() || !transparent"
+            [class.bg-white]="!scrolled() && transparent" [class.rotate-45]="mobileMenuOpen()"
+            [class.translate-y-2]="mobileMenuOpen()"></span>
+          <span class="block w-4 h-0.5 rounded-full transition-all" [class.bg-gray-900]="scrolled() || !transparent"
+            [class.bg-white]="!scrolled() && transparent" [class.opacity-0]="mobileMenuOpen()"></span>
+          <span class="block w-6 h-0.5 rounded-full transition-all" [class.bg-gray-900]="scrolled() || !transparent"
+            [class.bg-white]="!scrolled() && transparent" [class.-rotate-45]="mobileMenuOpen()"
+            [class.-translate-y-2]="mobileMenuOpen()"></span>
+        </button>
+      </div>
     </div>
   </div>
 
-  <div *ngIf="mobileMenuOpen()"
-       class="md:hidden absolute top-[74px] left-0 right-0 bg-white shadow-2xl px-6 pb-8 flex flex-col z-[50] animate-in slide-in-from-top duration-300">
-    <nav class="flex flex-col mb-6">
-      <a routerLink="/" (click)="toggleMenu()" class="py-4 text-base font-bold text-gray-800 border-b border-gray-50 no-underline hover:text-orange-500 transition-colors">Home</a>
-      <a routerLink="/tours" (click)="toggleMenu()" class="py-4 text-base font-bold text-gray-800 border-b border-gray-50 no-underline hover:text-orange-500 transition-colors">Experiences</a>
+  @if (mobileMenuOpen()) {
+  <div
+    class="md:hidden absolute top-[90px] left-4 right-4 bg-white/95 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl border border-gray-100 p-6 z-[100] animate-in slide-in-from-top duration-500">
+    <nav class="flex flex-col gap-1 mb-6">
+      <a routerLink="/" (click)="toggleMenu()"
+        class="px-6 py-4 text-lg font-black text-gray-900 hover:bg-orange-50 hover:text-orange-500 rounded-2xl transition-all no-underline">Home</a>
+      <a routerLink="/tours" (click)="toggleMenu()"
+        class="px-6 py-4 text-lg font-black text-gray-900 hover:bg-orange-50 hover:text-orange-500 rounded-2xl transition-all no-underline">Experiences</a>
 
       @if (currentUser()?.role === 'TOURIST') {
-        <a routerLink="/tourist/my-bookings" (click)="toggleMenu()" class="py-4 text-base font-bold text-gray-800 border-b border-gray-50 no-underline hover:text-orange-500 transition-colors">Mes Réservations</a>
+      <a routerLink="/tourist/my-bookings" (click)="toggleMenu()"
+        class="px-6 py-4 text-lg font-black text-gray-900 hover:bg-orange-50 hover:text-orange-500 rounded-2xl transition-all no-underline">My
+        Bookings</a>
       }
 
-      <a routerLink="/about" (click)="toggleMenu()" class="py-4 text-base font-bold text-gray-800 no-underline hover:text-orange-500 transition-colors">Our Story</a>
+      <a routerLink="/about" (click)="toggleMenu()"
+        class="px-6 py-4 text-lg font-black text-gray-900 hover:bg-orange-50 hover:text-orange-500 rounded-2xl transition-all no-underline">Our
+        Story</a>
     </nav>
 
     @if (!currentUser()) {
-      <div class="flex flex-col gap-3">
-        <a routerLink="/login" (click)="toggleMenu()" class="w-full text-center py-3.5 text-sm font-black text-gray-800 bg-gray-50 rounded-xl no-underline">Sign in</a>
-        <a routerLink="/register" (click)="toggleMenu()" class="w-full text-center py-3.5 text-sm font-black text-white bg-orange-500 rounded-xl no-underline shadow-lg shadow-orange-500/20">Register</a>
-      </div>
+    <div class="flex flex-col gap-3 pt-6 border-t border-gray-100">
+      <a routerLink="/login" (click)="toggleMenu()"
+        class="w-full text-center py-4 text-sm font-black text-gray-900 bg-gray-100 rounded-2xl no-underline tracking-widest uppercase text-[11px]">Sign
+        in</a>
+      <a routerLink="/register" (click)="toggleMenu()"
+        class="w-full text-center py-4 text-sm font-black text-white bg-gray-900 rounded-2xl no-underline shadow-xl tracking-widest uppercase text-[11px]">Start
+        Exploring</a>
+    </div>
     } @else {
-      <div class="flex flex-col gap-3 pt-4 border-t border-gray-50">
-        <div class="flex items-center gap-3 mb-2">
-           <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-black">{{ (currentUser()?.firstName || 'U').charAt(0) }}</div>
-           <div>
-              <p class="text-sm font-black text-gray-900 leading-none">{{ currentUser()?.firstName }}</p>
-              <p class="text-xs font-bold text-gray-400">{{ currentUser()?.email }}</p>
-           </div>
+    <div class="pt-6 border-t border-gray-100">
+      <div class="flex items-center gap-4 mb-6 px-6">
+        <div
+          class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 text-lg font-black">
+          {{ (currentUser()?.firstName || 'U').charAt(0) }}</div>
+        <div>
+          <p class="text-base font-black text-gray-900 leading-none mb-1">{{ currentUser()?.firstName }}</p>
+          <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">{{ currentUser()?.role }}</p>
         </div>
-        <button (click)="logout()" class="w-full text-center py-3.5 text-sm font-black text-red-500 bg-red-50 rounded-xl">Sign Out</button>
       </div>
+      <button (click)="logout()"
+        class="w-full py-4 text-sm font-black text-red-500 bg-red-50 rounded-2xl tracking-widest uppercase text-[11px]">Sign
+        Out</button>
+    </div>
     }
   </div>
+  }
 </header>
