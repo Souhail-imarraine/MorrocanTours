@@ -52,6 +52,7 @@ export class MyToursComponent implements OnInit {
   showModal  = signal(false);
   saveError  = signal('');
   saveSuccess= signal(false);
+  tourToDelete = signal<number | null>(null);
 
   selectedFile: File | null = null;
   imagePreview: string | null = null;
@@ -185,8 +186,27 @@ export class MyToursComponent implements OnInit {
   }
 
   deleteTour(id: number): void {
-    if (!confirm('Delete this tour?')) return;
-    this.tourService.deleteTour(id).subscribe(() => this.loadTours());
+    this.tourToDelete.set(id);
+  }
+
+  cancelDelete(): void {
+    this.tourToDelete.set(null);
+  }
+
+  confirmDelete(): void {
+    const id = this.tourToDelete();
+    if (!id) return;
+
+    this.tourService.deleteTour(id).subscribe({
+      next: () => {
+        this.loadTours();
+        this.cancelDelete();
+      },
+      error: (err) => {
+        console.error('Delete failed:', err);
+        this.cancelDelete();
+      }
+    });
   }
 
   publishTour(id: number): void {

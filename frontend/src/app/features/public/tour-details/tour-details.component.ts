@@ -61,6 +61,11 @@ export class TourDetailsComponent implements OnInit {
     return AuthService.getPhotoUrl(path);
   }
 
+  formatLanguages(langs: any[] | undefined): string {
+    if (!langs || !Array.isArray(langs)) return '';
+    return langs.map(l => l.name).join(', ');
+  }
+
   increment(): void {
     if (this.tour() && this.participants() < this.tour()!.availableSeats) {
       this.participants.update(v => v + 1);

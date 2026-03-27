@@ -21,9 +21,6 @@ export class ProfileComponent implements OnInit {
   saveSuccess = signal(false);
   saveError = signal('');
 
-  uploadingImg = signal(false);
-  previewUrl = signal<string | null>(null);
-  profileImagePath = signal('');
 
   form = this.fb.group({
     firstName: ['', [Validators.required, Validators.minLength(2)]],
@@ -41,14 +38,6 @@ export class ProfileComponent implements OnInit {
           phone: p.phone || '',
           city: p.city || ''
         });
-        if (p.profileImage) {
-          const base = environment.baseUrl;
-          const path = p.profileImage.replace(/^\/+/, '');
-          const url = path.startsWith('uploads/') ? `${base}/${path}` : `${base}/uploads/${path}`;
-          this.previewUrl.set(url);
-          this.profileImagePath.set(p.profileImage);
-          this.authService.profileImage.set(url);
-        }
       }
     });
   }
@@ -58,24 +47,6 @@ export class ProfileComponent implements OnInit {
     return !!(c?.invalid && (c.dirty || c.touched));
   }
 
-  onPhotoChange(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      const url = e.target?.result as string;
-      this.previewUrl.set(url);
-      this.authService.profileImage.set(url);
-    };
-    reader.readAsDataURL(file);
-    this.uploadingImg.set(true);
-    const fd = new FormData();
-    fd.append('file', file);
-    this.http.post<{ imageUrl: string }>(`${environment.apiUrl}/images/upload`, fd).subscribe({
-      next: res => { this.profileImagePath.set(res.imageUrl); this.uploadingImg.set(false); },
-      error: () => this.uploadingImg.set(false)
-    });
-  }
 
   onSubmit(): void {
     this.form.markAllAsTouched();
@@ -83,20 +54,18 @@ export class ProfileComponent implements OnInit {
     this.saving.set(true);
     this.saveSuccess.set(false);
     this.saveError.set('');
-    
+
     const v = this.form.value;
-    this.http.put(`${environment.apiUrl}/users/profile`, {
-      ...v,
-      profileImage: this.profileImagePath()
-    }).subscribe({
-      next: () => { 
-        this.saving.set(false); 
-        this.saveSuccess.set(true); 
-        setTimeout(() => this.saveSuccess.set(false), 3000); 
+    this.http.put(`${environment.apiUrl}/users/profile`, v).subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.saveSuccess.set(true);
+        this.authService.refreshCurrentUser();
+        setTimeout(() => this.saveSuccess.set(false), 3000);
       },
-      error: (err: any) => { 
-        this.saving.set(false); 
-        this.saveError.set(err?.error?.message || 'Update failed.'); 
+      error: (err: any) => {
+        this.saving.set(false);
+        this.saveError.set(err?.error?.message || 'Update failed.');
       }
     });
   }

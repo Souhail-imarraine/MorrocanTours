@@ -72,8 +72,7 @@ public class AuthServiceImpl implements AuthService {
         }
         user.setLanguages(new java.util.HashSet<>(languages));
         userRepository.save(user);
-        String token = jwtService.generateToken(user);
-        return toAuthResponse(user, token);
+        return toAuthResponse(user, null);
     }
 
     @Override

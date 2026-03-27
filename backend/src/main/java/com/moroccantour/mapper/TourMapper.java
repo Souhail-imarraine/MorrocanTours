@@ -39,11 +39,11 @@ public interface TourMapper {
         int confirmed = 0;
         if (tour.getBookings() != null) {
             for (Booking b : tour.getBookings()) {
-                if (BookingStatus.CONFIRMED.equals(b.getStatus())) {
+                if (!BookingStatus.CANCELLED.equals(b.getStatus())) {
                     confirmed += b.getNumberOfParticipants();
                 }
             }
         }
-        return tour.getMaxParticipants() - confirmed;
+        return Math.max(0, tour.getMaxParticipants() - confirmed);
     }
 }

@@ -134,45 +134,20 @@
               }
             </div>
 
-            @if (languagesLoading()) {
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                @for (_ of [1,2,3,4]; track $index) {
-                  <div class="h-12 rounded-2xl bg-gray-100 animate-pulse"></div>
+            @if (languages().length > 0) {
+              <div class="flex flex-wrap gap-2">
+                @for (lang of languages(); track lang.id) {
+                  @if (isLanguageSelected(lang.id)) {
+                    <div class="px-4 py-2 rounded-xl bg-orange-50 border border-orange-100 text-orange-700 font-bold text-sm flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                      {{ lang.name }}
+                    </div>
+                  }
+                }
+                @if ((form.get('languageIds')?.value || []).length === 0) {
+                  <p class="text-sm text-gray-400 italic">No languages specified yet.</p>
                 }
               </div>
-            }
-
-            @if (languagesError()) {
-              <div class="px-4 py-3 bg-red-50 border border-red-200 rounded-2xl text-sm text-red-600">
-                {{ languagesError() }}
-              </div>
-            }
-
-            @if (!languagesLoading() && !languagesError()) {
-              @if (languages().length === 0) {
-                <div class="px-4 py-3 bg-orange-50 border border-orange-200 rounded-2xl text-sm text-orange-700">
-                  No languages available yet. Please contact support or try again later.
-                </div>
-              }
-              @if (languages().length > 0) {
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  @for (lang of languages(); track lang.id) {
-                    <button type="button"
-                            (click)="toggleLanguage(lang.id)"
-                            [class]="isLanguageSelected(lang.id)
-                              ? 'w-full px-4 py-3 rounded-2xl border-2 border-orange-500 bg-orange-50 text-orange-700 font-black text-sm flex items-center justify-between shadow-sm'
-                              : 'w-full px-4 py-3 rounded-2xl border-2 border-gray-100 bg-white text-gray-700 font-bold text-sm flex items-center justify-between hover:border-orange-200 transition-all'">
-                      <span class="flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full" [class]="isLanguageSelected(lang.id) ? 'bg-orange-500' : 'bg-gray-300'"></span>
-                        {{ lang.name }}
-                      </span>
-                      @if (isLanguageSelected(lang.id)) {
-                        <span class="text-orange-500 font-black text-xs uppercase tracking-wide">Selected</span>
-                      }
-                    </button>
-                  }
-                </div>
-              }
             }
           </div>
 

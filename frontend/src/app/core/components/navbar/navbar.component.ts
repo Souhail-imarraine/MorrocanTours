@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, HostListener, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -13,16 +13,19 @@ export class NavbarComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
+  @Input() transparent = false;
+
   currentUser = this.authService.currentUser;
   profileImage = this.authService.profileImage;
 
   mobileMenuOpen = signal(false);
   userMenuOpen = signal(false);
+  scrolled = signal(false);
 
-  constructor() {
-    console.log(this.profileImage());
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.scrolled.set(window.scrollY > 20);
   }
-
 
   toggleMenu() { this.mobileMenuOpen.update(v => !v); }
   toggleUserMenu() { this.userMenuOpen.update(v => !v); }

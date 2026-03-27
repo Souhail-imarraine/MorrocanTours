@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 export class BookingService {
   private apiUrl = `${environment.apiUrl}/bookings`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   createBooking(request: BookingRequest): Observable<BookingResponse> {
     return this.http.post<BookingResponse>(this.apiUrl, request);
@@ -30,5 +30,8 @@ export class BookingService {
 
   rejectBooking(bookingId: number): Observable<BookingResponse> {
     return this.http.put<BookingResponse>(`${this.apiUrl}/guide/${bookingId}/reject`, {});
+  }
+  countAllTotalBookings(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/count-booking`);
   }
 }

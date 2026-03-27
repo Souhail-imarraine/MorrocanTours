@@ -155,7 +155,7 @@ export class RegisterGuideComponent implements OnInit {
         this.clearSession();
         setTimeout(() => {
           this.router.navigate(['/login'], { queryParams: { pending: 'guide' } });
-        }, 900);
+        }, 3000);
       },
       error: (err: any) => {
         this.loading.set(false);

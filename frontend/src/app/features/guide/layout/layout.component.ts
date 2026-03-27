@@ -18,7 +18,7 @@ export class LayoutComponent implements OnInit {
   ngOnInit(): void {
     // Load profile image AFTER injection is fully complete (avoids circular dep)
     if (this.authService.currentUser()) {
-      this.authService.loadProfileImage();
+      this.authService.refreshCurrentUser();
     }
   }
 

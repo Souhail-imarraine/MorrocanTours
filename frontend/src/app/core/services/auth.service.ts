@@ -39,18 +39,23 @@ export class AuthService {
     return (`${base}/uploads/${cleanPath}`).replace(/([^:])(\/\/+)/g, '$1/');
   }
 
-  loadProfileImage(): void {
+  refreshCurrentUser(): void {
+    const user = this.currentUser();
+    if (!user) return;
+
     this.http.get<any>(`${env.apiUrl}/users/profile`).subscribe({
       next: p => {
+        const updated = { 
+          ...user, 
+          firstName: p.firstName || user.firstName, 
+          lastName: p.lastName || user.lastName, 
+          profileImage: p.profileImage 
+        };
+        localStorage.setItem('user', JSON.stringify(updated));
+        this.currentUser.set(updated);
+        
         if (p.profileImage) {
-          const url = AuthService.getPhotoUrl(p.profileImage);
-          this.profileImage.set(url);
-          const user = this.currentUser();
-          if (user && user.profileImage !== p.profileImage) {
-            const updated = { ...user, profileImage: p.profileImage };
-            localStorage.setItem('user', JSON.stringify(updated));
-            this.currentUser.set(updated);
-          }
+          this.profileImage.set(AuthService.getPhotoUrl(p.profileImage));
         }
       }
     });
@@ -94,8 +99,7 @@ export class AuthService {
       if (authResult.profileImage) {
         this.profileImage.set(AuthService.getPhotoUrl(authResult.profileImage));
       }
-      // Force refreshing from backend to ensure we have the latest and cleanest data
-      this.loadProfileImage();
+      this.refreshCurrentUser();
     }
   }
 

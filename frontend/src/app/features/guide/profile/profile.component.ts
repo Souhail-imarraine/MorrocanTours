@@ -42,6 +42,9 @@ export class ProfileComponent implements OnInit {
   languagesError = signal('');
 
   ngOnInit(): void {
+    // Show cached image immediately
+    this.previewUrl.set(this.authService.profileImage());
+
     this.loadLanguages();
     this.http.get<any>(`${environment.apiUrl}/users/profile`).subscribe({
       next: (p) => {
@@ -51,7 +54,9 @@ export class ProfileComponent implements OnInit {
           phone: p.phone || '',
           city: p.city || '',
           bio: p.bio || '',
-          languageIds: Array.isArray(p.languages) ? p.languages.map((l: any) => l.id) : [],
+          languageIds: (p.languages && Array.isArray(p.languages))
+            ? p.languages.map((l: any) => Number(l.id))
+            : [],
           yearsOfExperience: p.yearsOfExperience ?? null
         });
         if (p.profileImage) {
@@ -93,20 +98,6 @@ export class ProfileComponent implements OnInit {
     return Array.isArray(selected) && selected.includes(id);
   }
 
-  toggleLanguage(id: number): void {
-    const ctrl = this.form.get('languageIds');
-    if (!ctrl) return;
-    const current = Array.isArray(ctrl.value) ? [...ctrl.value] as number[] : [];
-    const idx = current.indexOf(id);
-    if (idx >= 0) {
-      current.splice(idx, 1);
-    } else {
-      current.push(id);
-    }
-    ctrl.setValue(current);
-    ctrl.markAsDirty();
-  }
-
   onPhotoChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
@@ -133,8 +124,6 @@ export class ProfileComponent implements OnInit {
     this.saveSuccess.set(false);
     this.saveError.set('');
     const v = this.form.value;
-    // POST to profile update — backend must have this endpoint
-    // Using /users/profile — adjust if your backend uses a different path
     this.http.put(`${environment.apiUrl}/users/profile`, {
       ...v,
       ...(this.profileImagePath() ? { profileImagePath: this.profileImagePath() } : {})
@@ -142,8 +131,7 @@ export class ProfileComponent implements OnInit {
       next: () => {
         this.saving.set(false);
         this.saveSuccess.set(true);
-        // Sync with AuthService to update Navbar etc.
-        this.authService.loadProfileImage();
+        this.authService.refreshCurrentUser();
         setTimeout(() => this.saveSuccess.set(false), 3000);
       },
       error: (err: any) => { this.saving.set(false); this.saveError.set(err?.error?.message || 'Update failed.'); }

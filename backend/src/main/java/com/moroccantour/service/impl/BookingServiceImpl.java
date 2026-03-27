@@ -17,12 +17,14 @@ import com.moroccantour.repository.UserRepository;
 import com.moroccantour.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
@@ -37,6 +39,28 @@ public class BookingServiceImpl implements BookingService {
         ensureRole(tourist, Role.TOURIST);
         Tour tour = tourRepository.findById(request.tourId())
                 .orElseThrow(() -> new NotFoundException("Tour not found"));
+
+        // Rule 1: Prevent duplicate bookings for the same tour (ignore cancelled ones)
+        if (bookingRepository.existsByTourIdAndTouristIdAndStatusNot(tour.getId(), tourist.getId(),
+                BookingStatus.CANCELLED)) {
+            throw new BadRequestException("You have already booked this tour.");
+        }
+
+        // Rule 2: Global limit of 5 bookings per tourist (ignore cancelled ones)
+        long currentBookings = bookingRepository.countByTouristIdAndStatusNot(tourist.getId(), BookingStatus.CANCELLED);
+        if (currentBookings >= 5) {
+            throw new BadRequestException("You have reached the maximum limit of 5 bookings.");
+        }
+
+        // Rule 3: Check tour capacity
+        Integer totalOccupied = bookingRepository.sumParticipantsByTourIdAndStatusNotCancelled(
+                tour.getId(),
+                BookingStatus.CANCELLED
+        );
+        if (totalOccupied + request.numberOfParticipants() > tour.getMaxParticipants()) {
+            throw new BadRequestException("This tour is full or does not have enough remaining seats.");
+        }
+
         BigDecimal total = tour.getPrice().multiply(BigDecimal.valueOf(request.numberOfParticipants()));
         Booking booking = bookingMapper.toEntity(request);
         booking.setTour(tour);

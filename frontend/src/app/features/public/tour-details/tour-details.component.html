@@ -125,8 +125,8 @@
             <h3 class="text-lg font-bold text-gray-900 mb-1">{{ tour()!.guide.firstName }} {{ tour()!.guide.lastName
               }}</h3>
             <p class="text-sm text-gray-500">
-              @if (tour()!.guide.languages) {
-              Speaks <span class="font-semibold text-gray-700">{{ tour()!.guide.languages }}</span>
+              @if (tour()?.guide?.languages?.length) {
+              Speaks <span class="font-semibold text-gray-700">{{ formatLanguages(tour()!.guide.languages) }}</span>
               } @else {
               Expert local guide
               }

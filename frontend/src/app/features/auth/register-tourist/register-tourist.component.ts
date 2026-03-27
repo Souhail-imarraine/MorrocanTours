@@ -17,8 +17,8 @@ export class RegisterTouristComponent {
   private readonly authService = inject(AuthService);
 
   form = this.fb.group({
-    firstName: ['', [Validators.required, Validators.minLength(2)]],
-    lastName: ['', [Validators.required, Validators.minLength(2)]],
+    firstName: ['', [Validators.required, Validators.pattern(/.*\S.*/), Validators.minLength(2)]],
+    lastName: ['', [Validators.required, Validators.pattern(/.*\S.*/), Validators.minLength(2)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     phone: [''],
@@ -32,7 +32,7 @@ export class RegisterTouristComponent {
   serverError = signal('');
 
   togglePassword = () => {
-  this.showPassword.update(v => v ? false : true);
+    this.showPassword.update(v => v ? false : true);
   };
 
   isInvalid(field: string): boolean {
@@ -44,20 +44,22 @@ export class RegisterTouristComponent {
     const ctrl = this.form.get(field);
     if (!ctrl?.errors || !(ctrl.dirty || ctrl.touched)) return '';
     if (ctrl.errors['required']) return 'This field is required.';
+    if (ctrl.errors['pattern']) return 'Cannot be blank or whitespace only.';
     if (ctrl.errors['email']) return 'Please enter a valid email address.';
     if (ctrl.errors['minlength']) return `Minimum ${ctrl.errors['minlength'].requiredLength} characters required.`;
     return 'Invalid value.';
   }
 
   onSubmit(): void {
-    // if (this.form.invalid) {
-    //   this.form.markAllAsTouched();
-    //   return;
-    // }
-
-    this.loading.set(true);
     this.serverError.set('');
     this.success.set(false);
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.loading.set(true);
 
     const formValues = this.form.value;
 

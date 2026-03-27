@@ -16,7 +16,7 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.authService.currentUser()) {
-      this.authService.loadProfileImage();
+      this.authService.refreshCurrentUser();
     }
   }
 
