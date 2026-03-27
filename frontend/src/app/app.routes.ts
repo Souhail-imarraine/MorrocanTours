@@ -61,6 +61,8 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', loadComponent: () => import('./features/admin/dashboard/dashboard.component').then(c => c.DashboardComponent) },
       { path: 'users', loadComponent: () => import('./features/admin/users/users.component').then(c => c.UsersComponent) },
+      { path: 'bookings', loadComponent: () => import('./features/admin/bookings/bookings.component').then(c => c.BookingsComponent) },
+      { path: 'tours', loadComponent: () => import('./features/admin/tours/tours.component').then(c => c.ToursComponent) },
       { path: 'categories', loadComponent: () => import('./features/admin/categories/categories.component').then(c => c.CategoriesComponent) },
       { path: 'languages', loadComponent: () => import('./features/admin/languages/languages.component').then(c => c.LanguagesComponent) },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
