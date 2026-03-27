@@ -55,8 +55,7 @@ public class BookingServiceImpl implements BookingService {
         // Rule 3: Check tour capacity
         Integer totalOccupied = bookingRepository.sumParticipantsByTourIdAndStatusNotCancelled(
                 tour.getId(),
-                BookingStatus.CANCELLED
-        );
+                BookingStatus.CANCELLED);
         if (totalOccupied + request.numberOfParticipants() > tour.getMaxParticipants()) {
             throw new BadRequestException("This tour is full or does not have enough remaining seats.");
         }

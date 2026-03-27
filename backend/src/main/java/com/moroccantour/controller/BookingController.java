@@ -23,7 +23,7 @@ public class BookingController {
     @PostMapping
     @PreAuthorize("hasRole('TOURIST')")
     public ResponseEntity<BookingResponse> createBooking(@Valid @RequestBody CreateBookingRequest request,
-                                                         @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(bookingService.createBooking(request, userDetails.getUsername()));
     }
 
@@ -43,21 +43,30 @@ public class BookingController {
     @GetMapping("/guide/tour/{tourId}")
     @PreAuthorize("hasRole('GUIDE')")
     public ResponseEntity<List<BookingResponse>> getBookingsByTour(@PathVariable Long tourId,
-                                                                   @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(bookingService.getBookingsByTour(tourId, userDetails.getUsername()));
     }
 
     @PutMapping("/guide/{bookingId}/confirm")
     @PreAuthorize("hasRole('GUIDE')")
     public ResponseEntity<BookingResponse> confirmBooking(@PathVariable Long bookingId,
-                                                          @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(bookingService.confirmBooking(bookingId, userDetails.getUsername()));
     }
 
     @PutMapping("/guide/{bookingId}/reject")
     @PreAuthorize("hasRole('GUIDE')")
     public ResponseEntity<BookingResponse> rejectBooking(@PathVariable Long bookingId,
-                                                         @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(bookingService.rejectBooking(bookingId, userDetails.getUsername()));
     }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<BookingResponse>> getAllBookings() {
+        return ResponseEntity.ok(bookingService.getAllBookings());
+    }
+
 }
+
+    

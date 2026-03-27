@@ -2,9 +2,9 @@ name: MoroccanTours CI/CD
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main]
 
 jobs:
   # 1. Backend CI (Java/Maven)
@@ -52,7 +52,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate Docker Compose
         run: docker compose config
-        
+
   # 4. Build and Push to Docker Hub (Only on Main)
   deploy:
     runs-on: ubuntu-latest
