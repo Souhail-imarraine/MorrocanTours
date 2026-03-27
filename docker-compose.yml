@@ -19,6 +19,7 @@ services:
       interval: 10s
 
   app:
+    image: moroccan-tours-backend
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -39,6 +40,7 @@ services:
       - ./backend/uploads:/app/uploads
 
   frontend:
+    image: moroccan-tours-frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile
